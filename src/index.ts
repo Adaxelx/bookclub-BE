@@ -17,7 +17,8 @@ app.get('/', async (req, res) => {
   const allUsers3 = await prisma.book.findMany()
   const allUsers4 = await prisma.bookCategory.findMany()
   const allUsers5 = await prisma.opinion.findMany()
-  res.json({allUsers, allUsers2, allUsers3, allUsers4, allUsers5})
+  const allUsers6 = await prisma.bookGroupsToUsers.findMany()
+  res.json({allUsers, allUsers2, allUsers3, allUsers4, allUsers5, allUsers6})
 })
 
 app.listen(8000, () => {

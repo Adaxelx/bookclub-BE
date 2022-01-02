@@ -41,9 +41,9 @@ model BookCategory{
 
 model BookGroup{
   id     Int     @id @default(autoincrement())
-  users   User[]
+  users   BookGroupsToUsers[]
   categories  BookCategory[]
-  name    String
+  name    String 
 }
 
 model User {
@@ -51,6 +51,14 @@ model User {
   email   String   @unique
   name    String
   password String
-  bookGroups     BookGroup[] 
+  bookGroups     BookGroupsToUsers[] 
   opinions Opinion[]
+}
+
+model BookGroupsToUsers {
+  bookGroup       BookGroup     @relation(fields: [bookGroupId], references: [id])
+  bookGroupId    Int // relation scalar field (used in the `@relation` attribute above)
+  user User @relation(fields: [userId], references: [id])
+  userId Int // relation scalar field (used in the `@relation` attribute above)
+  @@id([userId,bookGroupId])
 }

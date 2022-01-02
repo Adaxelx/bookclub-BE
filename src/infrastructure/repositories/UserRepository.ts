@@ -1,5 +1,6 @@
 import {User, UserCredentials} from 'core/User'
 import {PrismaClient} from '@prisma/client'
+import {errorHandler} from '../../utils/helpers'
 
 const prisma = new PrismaClient()
 
@@ -11,7 +12,7 @@ export const loginUser = async ({email, password}: UserCredentials) => {
     }
     return false
   } catch (err) {
-    return false
+    return errorHandler(err) || false
   }
 }
 
@@ -25,6 +26,6 @@ export const registerUser = async (userData: User) => {
     const user = await prisma.user.create({data: userData})
     return user
   } catch (err) {
-    return false
+    return errorHandler(err) || false
   }
 }

@@ -2,31 +2,30 @@ import {PrismaClient} from '@prisma/client'
 const db = new PrismaClient()
 
 async function seed() {
-  getUsers().map(user => {
-    return db.user.create({
-      data: user,
-    })
-  })
-  getBookGroups().map(bookGroup => {
-    return db.bookGroup.create({
-      data: {
-        ...bookGroup,
-      },
-    })
-  })
-  getBookCategories().map(bookCategory => {
-    return db.bookCategory.create({
-      data: {...bookCategory, bookGroup: {connect: {id: 1}}},
-    })
-  })
-  getBook().map(data => {
-    return db.book.create({data: {...data, category: {connect: {id: 1}}}})
-  })
-  getOpinion().map(data => {
-    return db.opinion.create({
-      data: {...data, user: {connect: {id: 1}}, book: {connect: {id: 1}}},
-    })
-  })
+  const data = await Promise.all([
+    ...getUsers().map(user => {
+      return db.user.create({
+        data: {
+          ...user,
+          bookGroups: {create: [{bookGroup: {create: {name: 'test'}}}]},
+        },
+      })
+    }),
+    ...getBookCategories().map(bookCategory => {
+      return db.bookCategory.create({
+        data: {...bookCategory, bookGroup: {connect: {id: 1}}},
+      })
+    }),
+    ...getBook().map(data => {
+      return db.book.create({data: {...data, category: {connect: {id: 1}}}})
+    }),
+    ...getOpinion().map(data => {
+      return db.opinion.create({
+        data: {...data, user: {connect: {id: 1}}, book: {connect: {id: 1}}},
+      })
+    }),
+  ])
+  console.log(data)
 }
 
 seed()

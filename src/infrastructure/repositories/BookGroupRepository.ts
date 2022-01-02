@@ -1,21 +1,34 @@
-import {BookGroupDTO} from '../../core/BookGroup'
+import {BookGroupAddToGroupDTO, BookGroupDTO} from '../../core/BookGroup'
 import {PrismaClient} from '@prisma/client'
+import {errorHandler} from '../../utils/helpers'
 
 const prisma = new PrismaClient()
 
 export const createGroup = async ({userId, name}: BookGroupDTO) => {
   try {
     const doBookGroupExist = await prisma.bookGroup.findFirst({
-      where: {users: {some: {id: {equals: 1}}}, name},
+      where: {users: {some: {userId}}, name},
     })
     if (doBookGroupExist) {
       return 'exist'
     }
     const bookGroup = await prisma.bookGroup.create({
-      data: {name, users: {connect: {id: userId}}},
+      data: {name, users: {create: [{user: {connect: {id: userId}}}]}},
     })
     return bookGroup
   } catch (err) {
-    return false
+    return errorHandler(err) || false
+  }
+}
+
+export const addToGroup = async ({userId, id}: BookGroupAddToGroupDTO) => {
+  try {
+    const updatedGroup = await prisma.bookGroup.update({
+      where: {id},
+      data: {users: {create: [{userId}]}},
+    })
+    return updatedGroup
+  } catch (err) {
+    return errorHandler(err) || false
   }
 }

@@ -1,3 +1,4 @@
+import {Prisma} from '.prisma/client'
 import jwt from 'jsonwebtoken'
 
 export function checkIfValidData<T>(data: any): data is T {
@@ -22,4 +23,10 @@ export function authenticateUser(
 
     next()
   })
+}
+
+export const errorHandler = (err: unknown) => {
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    return 'notFound'
+  }
 }
