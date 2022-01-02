@@ -7,16 +7,50 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model BookGroup{
-//   id     Int     @id @default(autoincrement())
-//   user   User[]    @relation(fields: [creator], references: [id])
-//   creator Int     @unique
-// }
+model Opinion{
+  id    Int   @id @default(autoincrement())
+  book  Book  @relation(fields: [bookId], references: [id])
+  bookId Int
+  description String
+  user  User @relation(fields: [userId], references: [id])
+  userId Int
+  rate  Int
+}
+
+model Book{
+  id    Int   @id @default(autoincrement())
+  category    BookCategory @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  title   String
+  author    String
+  isRead    Boolean    @default(false)
+  dateStart   DateTime @default(now())
+  dateEnd     DateTime  @default(now())
+  opinions    Opinion[]
+}
+
+model BookCategory{
+  id    Int   @id @default(autoincrement())
+  bookGroup   BookGroup   @relation(fields: [bookGroupId], references: [id])
+  bookGroupId     Int
+  name      String
+  isActive  Boolean @default(false)
+  wasPicked Boolean @default(false)
+  book      Book?
+}
+
+model BookGroup{
+  id     Int     @id @default(autoincrement())
+  users   User[]
+  categories  BookCategory[]
+  name    String
+}
 
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   name    String
   password String
-//   bookGroups     BookGroup[]
+  bookGroups     BookGroup[] 
+  opinions Opinion[]
 }
