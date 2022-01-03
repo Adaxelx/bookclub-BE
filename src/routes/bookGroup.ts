@@ -1,9 +1,10 @@
 import {User} from 'core/User'
 import {Router} from 'express'
-import {authenticateUser, checkIfValidData} from '../utils/helpers'
+import {authenticateUser, handleResponse} from '../utils/helpers'
 import {
   createGroup,
   addToGroup,
+  getUserBookGroups,
 } from '../infrastructure/services/BookGroupService'
 import {BookGroup} from '@prisma/client'
 const router = Router()
@@ -15,16 +16,7 @@ router.post('/', async (req, res) => {
   const body = {name, userId}
   try {
     const response = await createGroup(body)
-    if (checkIfValidData<BookGroup>(response)) {
-      res.status(200)
-      res.json(response)
-    } else if (response) {
-      res.status(400)
-      res.json({status: response})
-    } else {
-      res.status(500)
-      res.json({status: 'unhandled'})
-    }
+    handleResponse<BookGroup>(res, response)
   } catch (err) {
     res.status(500)
     res.json({status: 'unhandled'})
@@ -37,17 +29,21 @@ router.patch('/:id/addUser', async (req, res) => {
   const body = {id: parseInt(id), userId}
   try {
     const response = await addToGroup(body)
-    res.status(200)
-    res.json(response)
-    // if (checkIfValidData<BookGroup>(response)) {
-    //   res.status(200)
-    //   res.json(response)
-    // } else if (response) {
-    //   res.status(400)
-    //   res.json({status: response})
-    // }
-    // res.status(500)
-    // res.json({status: 'unhandled'})
+
+    handleResponse<BookGroup>(res, response)
+  } catch (err) {
+    res.status(500)
+    res.json({status: 'unhandled'})
+  }
+})
+
+router.get('/all/:userId', async (req, res) => {
+  const {userId} = req.params
+
+  try {
+    const response = await getUserBookGroups(parseInt(userId))
+    handleResponse<BookGroup[]>(res, response)
+    return
   } catch (err) {
     res.status(500)
     res.json({status: 'unhandled'})

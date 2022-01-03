@@ -32,3 +32,14 @@ export const addToGroup = async ({userId, id}: BookGroupAddToGroupDTO) => {
     return errorHandler(err) || false
   }
 }
+
+export const getUserBookGroups = async (userId: number) => {
+  try {
+    const userGroups = await prisma.bookGroup.findMany({
+      where: {users: {some: {userId}}},
+    })
+    return userGroups
+  } catch (err) {
+    return errorHandler(err) || false
+  }
+}
