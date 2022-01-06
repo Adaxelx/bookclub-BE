@@ -1,7 +1,6 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import prisma, {Prisma} from './prismaClient'
 import jwt from 'jsonwebtoken'
 import {Request, Response} from 'express'
-const prisma = new PrismaClient()
 
 type ReqType = Request
 type ResType = Response

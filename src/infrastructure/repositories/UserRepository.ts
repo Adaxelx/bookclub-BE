@@ -1,8 +1,7 @@
 import {User, UserCredentials, UserTokenCredentials} from 'core/User'
-import {PrismaClient} from '@prisma/client'
+import prisma from '../../utils/prismaClient'
 import {errorHandler} from '../../utils/helpers'
 import {sendRegisterEmail} from '../../utils/mailer'
-const prisma = new PrismaClient()
 
 export const loginUser = async ({email, password}: UserCredentials) => {
   try {
