@@ -15,7 +15,9 @@
     "format": "npm run prettier -- --write",
     "check-format": "npm run prettier -- --list-different",
     "validate": "npm-run-all --parallel check-types check-format lint build",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "db:reset": "prisma migrate reset",
+    "db:seed": "npx prisma db seed"
   },
   "repository": {
     "type": "git",

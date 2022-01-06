@@ -13,7 +13,11 @@ export const createGroup = async ({userId, name}: BookGroupDTO) => {
       return 'exist'
     }
     const bookGroup = await prisma.bookGroup.create({
-      data: {name, users: {create: [{user: {connect: {id: userId}}}]}},
+      data: {
+        name,
+        creatorId: userId,
+        users: {create: [{user: {connect: {id: userId}}}]},
+      },
     })
     return bookGroup
   } catch (err) {

@@ -1,6 +1,9 @@
-import {User} from 'core/User'
 import {Router} from 'express'
-import {authenticateUser, handleResponse} from '../utils/helpers'
+import {
+  authenticateUser,
+  checkIfUserIsAdmin,
+  handleResponse,
+} from '../utils/helpers'
 import {
   createGroup,
   addToGroup,
@@ -23,10 +26,12 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.patch('/:id/addUser', async (req, res) => {
+router.patch('/:id/addUser', checkIfUserIsAdmin, async (req, res, next) => {
   const {userId} = req.body
   const {id} = req.params
+
   const body = {id: parseInt(id), userId}
+
   try {
     const response = await addToGroup(body)
 

@@ -23,7 +23,6 @@ model Book{
   categoryId    Int
   title   String
   author    String
-  isRead    Boolean    @default(false)
   dateStart   DateTime @default(now())
   dateEnd     DateTime  @default(now())
   opinions    Opinion[]
@@ -43,7 +42,9 @@ model BookGroup{
   id     Int     @id @default(autoincrement())
   users   BookGroupsToUsers[]
   categories  BookCategory[]
+  creatorId Int @default(-1)
   name    String 
+
 }
 
 model User {

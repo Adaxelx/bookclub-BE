@@ -18,6 +18,3 @@ steps:
   - script: |
       npm install
     displayName: 'npm install'
-  - script: |
-      npm run check-types && npx lint-staged
-    displayName: 'Check types & format'

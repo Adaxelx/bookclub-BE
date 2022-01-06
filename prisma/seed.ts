@@ -2,30 +2,38 @@ import {PrismaClient} from '@prisma/client'
 const db = new PrismaClient()
 
 async function seed() {
-  const data = await Promise.all([
-    ...getUsers().map(user => {
+  await Promise.all(
+    getUsers().map(user => {
       return db.user.create({
         data: {
           ...user,
-          bookGroups: {create: [{bookGroup: {create: {name: 'test'}}}]},
+          bookGroups: {
+            create: [{bookGroup: {create: {name: 'test', creatorId: 1}}}],
+          },
         },
       })
     }),
-    ...getBookCategories().map(bookCategory => {
+  )
+
+  await Promise.all(
+    getBookCategories().map(bookCategory => {
       return db.bookCategory.create({
         data: {...bookCategory, bookGroup: {connect: {id: 1}}},
       })
     }),
-    ...getBook().map(data => {
+  )
+  await Promise.all(
+    getBook().map(data => {
       return db.book.create({data: {...data, category: {connect: {id: 1}}}})
     }),
-    ...getOpinion().map(data => {
+  )
+  await Promise.all(
+    getOpinion().map(data => {
       return db.opinion.create({
         data: {...data, user: {connect: {id: 1}}, book: {connect: {id: 1}}},
       })
     }),
-  ])
-  console.log(data)
+  )
 }
 
 seed()
@@ -61,7 +69,6 @@ function getBook() {
     {
       title: 'Zapisane w kościach',
       author: 'Simon Beckett',
-      isRead: false,
       dateStart: new Date(),
       dateEnd: new Date(),
     },
