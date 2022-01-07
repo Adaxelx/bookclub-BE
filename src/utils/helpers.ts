@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from './prismaClient'
 import {Prisma} from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -23,7 +24,7 @@ export function authenticateUser(req: ReqType, res: ResType, next: NextType) {
 
   const localToken = process.env.TOKEN_SECRET || ''
 
-  jwt.verify(token, localToken, (err: any, user: any) => {
+  jwt.verify(token, localToken, (err: any) => {
     if (err) {
       res.status(403)
       return res.json({message: 'Not authorized.'})
