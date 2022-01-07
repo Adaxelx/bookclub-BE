@@ -1,11 +1,10 @@
 import {BookGroupAddToGroupDTO, BookGroupDTO} from '../../core/BookGroup'
-import {PrismaClient} from '@prisma/client'
+
 import {
   createGroup as createGroupR,
   addToGroup as addToGroupR,
   getUserBookGroups as getUserBookGroupsR,
 } from '../repositories/BookGroupRepository'
-const prisma = new PrismaClient()
 
 export const createGroup = async (bookGroupData: BookGroupDTO) => {
   try {
