@@ -17,7 +17,6 @@ function generateAccessToken(data: UserTokenCredentials) {
 export const loginUser = async (credentials: UserCredentials) => {
   try {
     const isLoggedIn = await loginUserR(credentials)
-    const {email} = credentials
     if (checkIfValidData<UserTokenCredentials>(isLoggedIn)) {
       const token = generateAccessToken(isLoggedIn)
       if (token) {
@@ -25,7 +24,7 @@ export const loginUser = async (credentials: UserCredentials) => {
       }
     }
   } catch (err) {
-    throw err
+    return false
   }
 }
 
@@ -44,6 +43,6 @@ export const registerUser = async (user: User) => {
     }
     return userResponse
   } catch (err) {
-    throw err
+    return false
   }
 }

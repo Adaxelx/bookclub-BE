@@ -41,6 +41,8 @@ export const errorHandler = (err: unknown) => {
         return 'notFound'
       case 'P2002':
         return 'duplicate'
+      case 'P2014':
+        return 'relation'
       default:
         return err.code
     }
@@ -70,7 +72,7 @@ export const checkIfUserIsAdmin = (
 ) => {
   const token = getToken(req)
   const localToken = process.env.TOKEN_SECRET || ''
-  const groupId = parseInt(req.params.id)
+  const groupId = parseInt(req.params.bookGroupId)
 
   let isUserAdmin = false
   if (token) {
