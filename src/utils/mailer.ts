@@ -2,9 +2,9 @@ import nodemailer from 'nodemailer'
 import {UserDTO} from '../core/User'
 
 export const sendRegisterEmail = async (user: UserDTO) => {
-  let testAccount = await nodemailer.createTestAccount()
+  const testAccount = await nodemailer.createTestAccount()
 
-  let transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     secure: false,
@@ -14,7 +14,7 @@ export const sendRegisterEmail = async (user: UserDTO) => {
     },
   })
 
-  let info = await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: '"Fred Foo 👻" <foo@example.com>',
     to: user.email,
     subject: `Utworzono konto BookClub`,
