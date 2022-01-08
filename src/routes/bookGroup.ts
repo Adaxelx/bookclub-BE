@@ -10,6 +10,7 @@ import {
   getUserBookGroups,
 } from '../infrastructure/services/BookGroupService'
 import {BookGroup} from '@prisma/client'
+import {bookGroupRoute} from '../utils/constants'
 const router = Router()
 
 router.use(authenticateUser)
@@ -26,23 +27,27 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.patch('/:id/addUser', checkIfUserIsAdmin, async (req, res, next) => {
-  const {userId} = req.body
-  const {id} = req.params
+router.patch(
+  `${bookGroupRoute}addUser`,
+  checkIfUserIsAdmin,
+  async (req, res) => {
+    const {userId} = req.body
+    const {bookGroupId} = req.params
 
-  const body = {id: parseInt(id), userId}
+    const body = {id: parseInt(bookGroupId), userId}
 
-  try {
-    const response = await addToGroup(body)
+    try {
+      const response = await addToGroup(body)
 
-    handleResponse<BookGroup>(res, response)
-  } catch (err) {
-    res.status(500)
-    res.json({status: 'unhandled'})
-  }
-})
+      handleResponse<BookGroup>(res, response)
+    } catch (err) {
+      res.status(500)
+      res.json({status: 'unhandled'})
+    }
+  },
+)
 
-router.get('/all/:userId', async (req, res) => {
+router.get(`/all/:userId`, async (req, res) => {
   const {userId} = req.params
 
   try {

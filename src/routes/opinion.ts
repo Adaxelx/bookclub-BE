@@ -1,29 +1,41 @@
 import {Router} from 'express'
-import {authenticateUser, handleResponse} from '../utils/helpers'
+import {
+  authenticateUser,
+  checkIfUserIsInGroup,
+  checkIfUserIsUserPassed,
+  handleResponse,
+} from '../utils/helpers'
 import {Opinion} from '@prisma/client'
 import {
   createOpinion,
   getOpinionsForBook,
 } from '../infrastructure/services/OpinionService'
 import {OpinionReturn} from '../core/Opinion'
-
+import {bookGroupRoute} from '../utils/constants'
 const router = Router()
 
 router.use(authenticateUser)
 
-router.post('/', async (req, res) => {
-  const {bookId, description, userId, rate} = req.body
-  const body = {bookId, description, userId, rate}
-  try {
-    const response = await createOpinion(body)
-    handleResponse<Opinion>(res, response)
-  } catch (err) {
-    res.status(500)
-    res.json({status: 'unhandled'})
-  }
-})
+const route = `${bookGroupRoute}opinion/`
 
-router.get('/:bookId', async (req, res) => {
+router.post(
+  `${route}`,
+  checkIfUserIsInGroup,
+  checkIfUserIsUserPassed,
+  async (req, res) => {
+    const {bookId, description, userId, rate} = req.body
+    const body = {bookId, description, userId, rate}
+    try {
+      const response = await createOpinion(body)
+      handleResponse<Opinion>(res, response)
+    } catch (err) {
+      res.status(500)
+      res.json({status: 'unhandled'})
+    }
+  },
+)
+
+router.get(`${route}:bookId`, async (req, res) => {
   const {bookId} = req.params
 
   try {

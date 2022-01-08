@@ -82,18 +82,89 @@ export const checkIfUserIsAdmin = (
           const bookGroup = await prisma.bookGroup.findFirst({
             where: {id: groupId, creatorId: user?.id},
           })
-          isUserAdmin = Boolean(bookGroup)
 
+          isUserAdmin = Boolean(bookGroup)
+          console.log(isUserAdmin)
           if (!isUserAdmin) {
             res.status(403)
-            return res.json({message: 'notAuthorized.'})
+            return res.json({status: 'notAuthorized'})
+          }
+          next()
+        }
+      } catch (err) {
+        console.log(err)
+        res.status(500)
+        return res.json({status: 'unknown'})
+      }
+    })
+  } else {
+    res.status(403)
+    return res.json({status: 'notAuthorized'})
+  }
+}
+
+export const checkIfUserIsInGroup = (
+  req: ReqType,
+  res: ResType,
+  next: NextType,
+) => {
+  const token = getToken(req)
+  const localToken = process.env.TOKEN_SECRET || ''
+  const groupId = parseInt(req.params.bookGroupId)
+
+  let isUserInGroup = false
+  if (token) {
+    jwt.verify(token, localToken, async (err: any, user: any) => {
+      try {
+        if (user) {
+          const userData = await prisma.user.findFirst({
+            where: {id: user.id, bookGroups: {some: {bookGroupId: groupId}}},
+          })
+
+          isUserInGroup = Boolean(userData)
+
+          if (!isUserInGroup) {
+            res.status(403)
+            return res.json({status: 'notAuthorized'})
           }
           next()
         }
       } catch (err) {
         res.status(500)
-        return res.json({message: 'unknown'})
+        return res.json({status: 'unknown'})
       }
     })
+  } else {
+    res.status(403)
+    return res.json({status: 'notAuthorized'})
+  }
+}
+
+export const checkIfUserIsUserPassed = (
+  req: ReqType,
+  res: ResType,
+  next: NextType,
+) => {
+  const token = getToken(req)
+  const localToken = process.env.TOKEN_SECRET || ''
+  const userId = parseInt(req?.body?.userId)
+
+  if (token) {
+    jwt.verify(token, localToken, async (err: any, user: any) => {
+      try {
+        if (user && userId === user.id) {
+          next()
+        } else {
+          res.status(403)
+          return res.json({status: 'notAuthorized'})
+        }
+      } catch (err) {
+        res.status(500)
+        return res.json({status: 'unknown'})
+      }
+    })
+  } else {
+    res.status(403)
+    return res.json({status: 'notAuthorized'})
   }
 }

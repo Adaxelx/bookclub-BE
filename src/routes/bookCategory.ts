@@ -1,5 +1,10 @@
 import {Router} from 'express'
-import {authenticateUser, handleResponse} from '../utils/helpers'
+import {
+  authenticateUser,
+  checkIfUserIsAdmin,
+  checkIfUserIsInGroup,
+  handleResponse,
+} from '../utils/helpers'
 import {
   createCategory,
   getGroupCategories,
@@ -8,13 +13,17 @@ import {
 } from '../infrastructure/services/BookCategoryService'
 import {BookCategory} from '@prisma/client'
 import {BookCategoryEdit} from 'core/BookCategory'
+import {bookGroupRoute} from '../utils/constants'
 
 const router = Router()
 
+const route = `${bookGroupRoute}bookCategory/`
+
 router.use(authenticateUser)
 
-router.post('/', async (req, res) => {
-  const {name, bookGroupId} = req.body
+router.post(route, checkIfUserIsAdmin, async (req, res) => {
+  const {name} = req.body
+  const bookGroupId = parseInt(req.params.bookGroupId)
   const body = {name, bookGroupId}
   try {
     const response = await createCategory(body)
@@ -25,7 +34,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.get('/all/:bookGroupId', async (req, res) => {
+router.get(`${route}all`, checkIfUserIsInGroup, async (req, res) => {
   const {bookGroupId} = req.params
 
   try {
@@ -38,7 +47,7 @@ router.get('/all/:bookGroupId', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete(`${route}:id`, checkIfUserIsAdmin, async (req, res) => {
   const {id} = req.params
 
   try {
@@ -51,7 +60,7 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch(`${route}:id`, checkIfUserIsAdmin, async (req, res) => {
   const {id} = req.params
   const data: BookCategoryEdit = {id: parseInt(id), ...req.body}
 

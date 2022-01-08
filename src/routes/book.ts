@@ -1,16 +1,24 @@
 import {Router} from 'express'
-import {authenticateUser, handleResponse} from '../utils/helpers'
+import {
+  authenticateUser,
+  checkIfUserIsAdmin,
+  checkIfUserIsInGroup,
+  handleResponse,
+} from '../utils/helpers'
 import {Book} from '@prisma/client'
 import {
   createBook,
   getBookForCategory,
 } from '../infrastructure/services/BookService'
+import {bookGroupRoute} from '../utils/constants'
 
 const router = Router()
 
 router.use(authenticateUser)
 
-router.post('/', async (req, res) => {
+const route = `${bookGroupRoute}book/`
+
+router.post(route, checkIfUserIsAdmin, async (req, res) => {
   const {categoryId, title, author, dateEnd, dateStart} = req.body
   const body = {categoryId, title, author, dateEnd, dateStart}
   try {
@@ -22,7 +30,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.get('/:categoryId', async (req, res) => {
+router.get(`${route}:categoryId`, checkIfUserIsInGroup, async (req, res) => {
   const {categoryId} = req.params
 
   try {
