@@ -5,6 +5,7 @@ import userRoutes from './routes/user'
 import bookGroupRoutes from './routes/bookGroup'
 import bookCategoryRoutes from './routes/bookCategory'
 import bookRoutes from './routes/book'
+import opinionRoutes from './routes/opinion'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use('/user', userRoutes)
 app.use('/bookGroup', bookGroupRoutes)
 app.use('/bookCategory', bookCategoryRoutes)
 app.use('/book', bookRoutes)
+app.use('/opinion', opinionRoutes)
 app.get('/', async (req, res) => {
   const allUsers = await prisma.bookGroup.findMany()
   const allUsers2 = await prisma.user.findMany()
