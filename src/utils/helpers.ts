@@ -84,7 +84,7 @@ export const checkIfUserIsAdmin = (
           })
 
           isUserAdmin = Boolean(bookGroup)
-          console.log(isUserAdmin)
+
           if (!isUserAdmin) {
             res.status(403)
             return res.json({status: 'notAuthorized'})
@@ -92,7 +92,6 @@ export const checkIfUserIsAdmin = (
           next()
         }
       } catch (err) {
-        console.log(err)
         res.status(500)
         return res.json({status: 'unknown'})
       }
