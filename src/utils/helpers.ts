@@ -42,7 +42,7 @@ export const errorHandler = (err: unknown) => {
       case 'P2002':
         return 'duplicate'
       case 'P2014':
-        return 'relation'
+        return 'Nie mozna dodać więcej obiektów.'
       default:
         return err.code
     }
@@ -58,10 +58,10 @@ export function handleResponse<T>(
     res.json(response)
   } else if (response) {
     res.status(400)
-    res.json({status: response})
+    res.json({message: response})
   } else {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 }
 
@@ -87,18 +87,18 @@ export const checkIfUserIsAdmin = (
 
           if (!isUserAdmin) {
             res.status(403)
-            return res.json({status: 'notAuthorized'})
+            return res.json({message: 'notAuthorized'})
           }
           next()
         }
       } catch (err) {
         res.status(500)
-        return res.json({status: 'unknown'})
+        return res.json({message: 'unknown'})
       }
     })
   } else {
     res.status(403)
-    return res.json({status: 'notAuthorized'})
+    return res.json({message: 'notAuthorized'})
   }
 }
 
@@ -124,18 +124,18 @@ export const checkIfUserIsInGroup = (
 
           if (!isUserInGroup) {
             res.status(403)
-            return res.json({status: 'notAuthorized'})
+            return res.json({message: 'notAuthorized'})
           }
           next()
         }
       } catch (err) {
         res.status(500)
-        return res.json({status: 'unknown'})
+        return res.json({message: 'unknown'})
       }
     })
   } else {
     res.status(403)
-    return res.json({status: 'notAuthorized'})
+    return res.json({message: 'notAuthorized'})
   }
 }
 
@@ -155,15 +155,15 @@ export const checkIfUserIsUserPassed = (
           next()
         } else {
           res.status(403)
-          return res.json({status: 'notAuthorized'})
+          return res.json({message: 'notAuthorized'})
         }
       } catch (err) {
         res.status(500)
-        return res.json({status: 'unknown'})
+        return res.json({message: 'unknown'})
       }
     })
   } else {
     res.status(403)
-    return res.json({status: 'notAuthorized'})
+    return res.json({message: 'notAuthorized'})
   }
 }

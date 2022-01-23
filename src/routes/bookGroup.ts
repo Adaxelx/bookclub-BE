@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
     handleResponse<BookGroup>(res, response)
   } catch (err) {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 
@@ -31,10 +31,10 @@ router.patch(
   `${bookGroupRoute}addUser`,
   checkIfUserIsAdmin,
   async (req, res) => {
-    const {userId} = req.body
+    const {email} = req.body
     const {bookGroupId} = req.params
 
-    const body = {id: parseInt(bookGroupId), userId}
+    const body = {id: parseInt(bookGroupId), email}
 
     try {
       const response = await addToGroup(body)
@@ -42,7 +42,7 @@ router.patch(
       handleResponse<BookGroup>(res, response)
     } catch (err) {
       res.status(500)
-      res.json({status: 'unhandled'})
+      res.json({message: 'unhandled'})
     }
   },
 )
@@ -55,8 +55,9 @@ router.get(`/all/:userId`, async (req, res) => {
     handleResponse<BookGroup[]>(res, response)
     return
   } catch (err) {
+    console.log(err)
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 

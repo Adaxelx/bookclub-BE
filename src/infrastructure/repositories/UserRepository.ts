@@ -15,6 +15,21 @@ export const loginUser = async ({email, password}: UserCredentials) => {
   }
 }
 
+export const getUsersForBookGroup = async ({
+  bookGroupId,
+}: {
+  bookGroupId: number
+}) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {bookGroups: {some: {bookGroupId}}},
+    })
+    return users
+  } catch (err) {
+    return errorHandler(err) || false
+  }
+}
+
 export const registerUser = async (userData: User) => {
   const {email} = userData
   try {
@@ -23,9 +38,7 @@ export const registerUser = async (userData: User) => {
       return 'exist'
     }
     const user = await prisma.user.create({data: userData})
-    if (user) {
-      await sendRegisterEmail(user)
-    }
+
     return user
   } catch (err) {
     return errorHandler(err) || false

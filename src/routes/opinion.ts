@@ -29,8 +29,9 @@ router.post(
       const response = await createOpinion(body)
       handleResponse<Opinion>(res, response)
     } catch (err) {
+      console.log(err)
       res.status(500)
-      res.json({status: 'unhandled'})
+      res.json({message: 'unhandled'})
     }
   },
 )
@@ -44,7 +45,7 @@ router.get(`${route}:bookId`, async (req, res) => {
     return
   } catch (err) {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 

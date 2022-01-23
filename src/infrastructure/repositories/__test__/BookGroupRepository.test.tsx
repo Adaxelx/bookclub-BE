@@ -39,7 +39,9 @@ describe('BookGroupRepository', () => {
 
       prismaMock.bookGroup.create.mockResolvedValue(bookGroup)
 
-      await expect(createGroup(bookGroupDTO)).resolves.toEqual('exist')
+      await expect(createGroup(bookGroupDTO)).resolves.toEqual(
+        'Posiadasz grupę o podanej nazwie.',
+      )
     })
 
     it('should handle other errors', async () => {
@@ -59,13 +61,21 @@ describe('BookGroupRepository', () => {
       const id = 1
       const userId = 2
 
-      const bookGroupDTO = {userId, id}
+      const bookGroupDTO = {userId, id, email: 'abc@o2.pl'}
 
       const expectedGroup = {
         id,
         name: 'Something',
         creatorId: 1,
+        email: 'abc@o2.pl',
       }
+
+      prismaMock.user.findFirst.mockResolvedValue({
+        name: 'aaa',
+        email: 'bbb@gmail.com',
+        password: 'ccc',
+        id: 123,
+      })
 
       prismaMock.bookGroup.update.mockResolvedValue(expectedGroup)
 
@@ -76,7 +86,14 @@ describe('BookGroupRepository', () => {
       const id = 1
       const userId = 2
 
-      const bookGroupDTO = {userId, id}
+      const bookGroupDTO = {userId, id, email: 'abc@o2.pl'}
+
+      prismaMock.user.findFirst.mockResolvedValue({
+        name: 'aaa',
+        email: 'bbb@gmail.com',
+        password: 'ccc',
+        id: 123,
+      })
 
       prismaMock.bookGroup.update.mockRejectedValue(error)
 

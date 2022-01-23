@@ -5,13 +5,13 @@ import {OpinionDTO, OpinionReturn} from '../../core/Opinion'
 
 export const createOpinion = async ({bookId, userId, ...data}: OpinionDTO) => {
   try {
-    const hasUserRatedBook = await prisma.opinion.findFirst({
-      where: {userId, bookId},
-    })
+    // const hasUserRatedBook = await prisma.opinion.findFirst({
+    //   where: {userId, bookId},
+    // })
 
-    if (hasUserRatedBook) {
-      return 'exist'
-    }
+    // if (hasUserRatedBook) {
+    //   return 'exist'
+    // }
 
     const opinion = await prisma.opinion.create({
       data: {
@@ -23,6 +23,7 @@ export const createOpinion = async ({bookId, userId, ...data}: OpinionDTO) => {
 
     return opinion
   } catch (err) {
+    console.log(err)
     return errorHandler(err) || false
   }
 }

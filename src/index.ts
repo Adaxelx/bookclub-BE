@@ -6,12 +6,13 @@ import bookGroupRoutes from './routes/bookGroup'
 import bookCategoryRoutes from './routes/bookCategory'
 import bookRoutes from './routes/book'
 import opinionRoutes from './routes/opinion'
+import cors from 'cors'
 
 dotenv.config()
 
 const prisma = new PrismaClient()
 const app = express()
-
+app.use(cors())
 app.use(express.json())
 app.use('/user', userRoutes)
 app.use('/bookGroup', bookGroupRoutes)

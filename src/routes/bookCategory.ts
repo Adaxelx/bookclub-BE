@@ -30,7 +30,7 @@ router.post(route, checkIfUserIsAdmin, async (req, res) => {
     handleResponse<BookCategory>(res, response)
   } catch (err) {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 
@@ -43,7 +43,7 @@ router.get(`${route}all`, checkIfUserIsInGroup, async (req, res) => {
     return
   } catch (err) {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 
@@ -56,21 +56,24 @@ router.delete(`${route}:id`, checkIfUserIsAdmin, async (req, res) => {
     return
   } catch (err) {
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 
 router.patch(`${route}:id`, checkIfUserIsAdmin, async (req, res) => {
   const {id} = req.params
   const data: BookCategoryEdit = {id: parseInt(id), ...req.body}
-
+  console.log(data)
   try {
     const response = await updateCategory(data)
+    console.log(response)
     handleResponse<BookCategory>(res, response)
+
     return
   } catch (err) {
+    console.log(err)
     res.status(500)
-    res.json({status: 'unhandled'})
+    res.json({message: 'unhandled'})
   }
 })
 

@@ -1,10 +1,10 @@
-import {BookGroup as PrismaBookGroup} from '@prisma/client'
+import {BookGroup as PrismaBookGroup} from '../utils/prismaClient'
 
 export type BookGroupDTO = {userId: number} & Omit<
   PrismaBookGroup,
   'id' | 'creatorId'
 >
-export type BookGroupAddToGroupDTO = {userId: number} & Omit<
+export type BookGroupAddToGroupDTO = {email: string} & Omit<
   PrismaBookGroup,
   'name' | 'creatorId'
 >

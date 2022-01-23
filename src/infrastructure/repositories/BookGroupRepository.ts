@@ -8,7 +8,7 @@ export const createGroup = async ({userId, name}: BookGroupDTO) => {
       where: {users: {some: {userId}}, name},
     })
     if (doBookGroupExist) {
-      return 'exist'
+      return 'Posiadasz grupę o podanej nazwie.'
     }
     const bookGroup = await prisma.bookGroup.create({
       data: {
@@ -19,19 +19,25 @@ export const createGroup = async ({userId, name}: BookGroupDTO) => {
     })
     return bookGroup
   } catch (err) {
-    return errorHandler(err) || false
+    return false
   }
 }
 
-export const addToGroup = async ({userId, id}: BookGroupAddToGroupDTO) => {
+export const addToGroup = async ({email, id}: BookGroupAddToGroupDTO) => {
   try {
+    const user = await prisma.user.findFirst({
+      where: {email},
+    })
+    if (!user) {
+      return 'Nie ma takiego uzytkownika'
+    }
     const updatedGroup = await prisma.bookGroup.update({
       where: {id},
-      data: {users: {create: [{userId}]}},
+      data: {users: {create: [{userId: user.id}]}},
     })
     return updatedGroup
   } catch (err) {
-    return errorHandler(err) || false
+    return false
   }
 }
 
@@ -42,6 +48,6 @@ export const getUserBookGroups = async (userId: number) => {
     })
     return userGroups
   } catch (err) {
-    return errorHandler(err) || false
+    return false
   }
 }
